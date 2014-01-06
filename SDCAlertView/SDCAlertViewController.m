@@ -110,7 +110,10 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 }
 
 - (void)showAlert:(SDCAlertView *)alert animated:(BOOL)animated completion:(void (^)(void))completionHandler {
+    @synchronized(self.alertViews) {
 	[self.alertViews addObject:alert];
+    }
+    
 	[self.rootView addSubview:alert];
 	
 	if ([[UIApplication sharedApplication] keyWindow] != self.window) {
@@ -133,18 +136,25 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 - (void)dismissAlert:(SDCAlertView *)alert animated:(BOOL)animated completion:(void (^)(void))completionHandler {
 	[alert resignFirstResponder];
 	
-	BOOL isLastAlert = [self.alertViews count] == 1;
-	if (isLastAlert)
+    @synchronized(self.alertViews) {
+        if ([self.alertViews count] == 1)
 		self.previousWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+    }
 
 	void (^dismissBlock)() = ^{
 		[alert removeFromSuperview];
+        
+        @synchronized(self.alertViews) {
 		[self.alertViews removeObject:alert];
 		
-		if (isLastAlert) {
+            // To avoid a race condition where another SDCAlertView is shown between the call
+            // to dismissAlert:animated:completion: and the time that this block runs, we
+            // check if there are *still* no alert views currently being shown.
+            if ([self.alertViews count] == 0) {
 			[self.previousWindow makeKeyAndVisible];
 			self.window = nil;
 		}
+        }
 		
 		completionHandler();
 	};
@@ -199,8 +209,10 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	[alert.toolbar.layer addAnimation:opacityAnimation forKey:@"opacity"];
 	
 	// If we're animating the first alert in the queue, also animate the dimmed background
+    @synchronized(self.alertViews) {
 	if ([self.alertViews count] == 1)
 		[self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
+}
 }
 
 - (void)applyAnimationsForDismissingAlert:(SDCAlertView *)alert {
@@ -221,10 +233,12 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	[alert.toolbar.layer addAnimation:opacityAnimation forKey:@"opacity"];
 
 	// If the last alert is being dismissed, also animate the dimmed background back to normal
+    @synchronized(self.alertViews) {
 	if ([self.alertViews count] == 1) {
 		self.backgroundColorView.layer.opacity = 0;
 		[self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
 	}
+}
 }
 
 - (void)dealloc {
