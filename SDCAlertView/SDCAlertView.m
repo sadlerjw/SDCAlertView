@@ -11,6 +11,7 @@
 #import "SDCAlertViewController.h"
 #import "SDCAlertViewBackgroundView.h"
 #import "SDCAlertViewContentView.h"
+#import "SDCAlertViewWrapper.h"
 
 #import "UIView+SDCAutoLayout.h"
 
