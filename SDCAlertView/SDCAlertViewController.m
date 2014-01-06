@@ -106,12 +106,14 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 }
 
 - (void)keyboardDidHide:(NSNotification *)notification {
-	self.rootView.frame = self.window.frame;
+    if (self.window) {
+        self.rootView.frame = self.window.frame;
+    }
 }
 
 - (void)showAlert:(SDCAlertView *)alert animated:(BOOL)animated completion:(void (^)(void))completionHandler {
     @synchronized(self.alertViews) {
-	[self.alertViews addObject:alert];
+        [self.alertViews addObject:alert];
     }
     
 	[self.rootView addSubview:alert];
@@ -138,22 +140,22 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	
     @synchronized(self.alertViews) {
         if ([self.alertViews count] == 1)
-		self.previousWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
+            self.previousWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
     }
 
 	void (^dismissBlock)() = ^{
 		[alert removeFromSuperview];
         
         @synchronized(self.alertViews) {
-		[self.alertViews removeObject:alert];
-		
+            [self.alertViews removeObject:alert];
+            
             // To avoid a race condition where another SDCAlertView is shown between the call
             // to dismissAlert:animated:completion: and the time that this block runs, we
             // check if there are *still* no alert views currently being shown.
             if ([self.alertViews count] == 0) {
-			[self.previousWindow makeKeyAndVisible];
-			self.window = nil;
-		}
+                [self.previousWindow makeKeyAndVisible];
+                self.window = nil;
+            }
         }
 		
 		completionHandler();
@@ -210,9 +212,9 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	
 	// If we're animating the first alert in the queue, also animate the dimmed background
     @synchronized(self.alertViews) {
-	if ([self.alertViews count] == 1)
-		[self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
-}
+        if ([self.alertViews count] == 1)
+            [self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
+    }
 }
 
 - (void)applyAnimationsForDismissingAlert:(SDCAlertView *)alert {
@@ -234,11 +236,11 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 
 	// If the last alert is being dismissed, also animate the dimmed background back to normal
     @synchronized(self.alertViews) {
-	if ([self.alertViews count] == 1) {
-		self.backgroundColorView.layer.opacity = 0;
-		[self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
-	}
-}
+        if ([self.alertViews count] == 1) {
+            self.backgroundColorView.layer.opacity = 0;
+            [self.backgroundColorView.layer addAnimation:opacityAnimation forKey:@"opacity"];
+        }
+    }
 }
 
 - (void)dealloc {
