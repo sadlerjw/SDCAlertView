@@ -176,5 +176,13 @@
     return [self.alertView textFieldAtIndex:textFieldIndex];
 }
 
+- (void)addSubview:(UIView*)subview {
+    if (IOS_7) {
+        [((SDCAlertView*)self.alertView).contentView addSubview:subview];
+    } else {
+        [self.alertView addSubview:subview];
+    }
+}
+
 
 @end

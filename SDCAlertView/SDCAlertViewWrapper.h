@@ -62,6 +62,8 @@ typedef NS_ENUM(NSInteger, SDCAlertViewStyle) {
  The field at index 0 will be the first text field (the single field or the login field), the field at index 1 will be the password field. */
 - (UITextField *)textFieldAtIndex:(NSInteger)textFieldIndex NS_AVAILABLE_IOS(5_0);
 
+- (void)addSubview:(UIView*)subview;
+
 @end
 
 @protocol SDCAlertViewWrapperDelegate <NSObject>
