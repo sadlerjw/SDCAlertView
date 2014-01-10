@@ -23,6 +23,7 @@ static UIOffset const SDCAlertViewParallaxSlideMagnitude = {15.75, 15.75};
 
 static NSInteger const SDCAlertViewUnspecifiedButtonIndex = -1;
 static NSInteger const SDCAlertViewDefaultFirstButtonIndex = 0;
+static NSInteger const SDCAlertViewMinimumVerticalMargin = 25;
 
 #pragma mark - SDCAlertView
 
@@ -334,7 +335,7 @@ static NSInteger const SDCAlertViewDefaultFirstButtonIndex = 0;
     // (The superview takes up the entire screen)
     NSArray* constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=spacing)-[self]-(>=spacing)-|"
                                                                    options:0
-                                                                   metrics:@{@"spacing": @(25)}
+                                                                   metrics:@{@"spacing": @(SDCAlertViewMinimumVerticalMargin)}
                                                                      views:@{@"self": self}];
     [self.superview addConstraints:constraints];
 }
