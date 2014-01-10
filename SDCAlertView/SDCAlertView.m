@@ -11,6 +11,7 @@
 #import "SDCAlertViewController.h"
 #import "SDCAlertViewBackgroundView.h"
 #import "SDCAlertViewContentView.h"
+#import "SDCAlertViewWrapper.h"
 
 #import "UIView+SDCAutoLayout.h"
 
@@ -22,6 +23,7 @@ static UIOffset const SDCAlertViewParallaxSlideMagnitude = {15.75, 15.75};
 
 static NSInteger const SDCAlertViewUnspecifiedButtonIndex = -1;
 static NSInteger const SDCAlertViewDefaultFirstButtonIndex = 0;
+static NSInteger const SDCAlertViewMinimumVerticalMargin = 25;
 
 #pragma mark - SDCAlertView
 
@@ -328,6 +330,14 @@ static NSInteger const SDCAlertViewDefaultFirstButtonIndex = 0;
 - (void)positionSelf {
 	[self sdc_pinWidth:SDCAlertViewWidth];
 	[self sdc_centerInSuperview];
+    
+    // Make sure that the alert never grows larger than the view that contains it.
+    // (The superview takes up the entire screen)
+    NSArray* constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=spacing)-[self]-(>=spacing)-|"
+                                                                   options:0
+                                                                   metrics:@{@"spacing": @(SDCAlertViewMinimumVerticalMargin)}
+                                                                     views:@{@"self": self}];
+    [self.superview addConstraints:constraints];
 }
 
 #pragma mark - Cleanup
