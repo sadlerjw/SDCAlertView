@@ -58,8 +58,6 @@ static NSMutableSet* wrappersForShowingAlerts = nil;
             self.alertView = [[UIAlertView alloc] init];
             ((UIAlertView*)self.alertView).delegate = self;
         }
-        
-        NSLog(@"New alert without title, %@", self);
     }
     return self;
 }
@@ -83,8 +81,6 @@ static NSMutableSet* wrappersForShowingAlerts = nil;
         self.alertView = [self.alertView initWithTitle:title message:message delegate:self cancelButtonTitle:cancelButtonTitle otherButtonTitles:nil];
         
         self.delegate = aDelegate;
-        
-        NSLog(@"New alert with title, %@", self);
         
         va_list argumentList;
 		va_start(argumentList, otherButtonTitles);
