@@ -329,6 +329,14 @@ static NSInteger const SDCAlertViewDefaultFirstButtonIndex = 0;
 - (void)positionSelf {
 	[self sdc_pinWidth:SDCAlertViewWidth];
 	[self sdc_centerInSuperview];
+    
+    // Make sure that the alert never grows larger than the view that contains it.
+    // (The superview takes up the entire screen)
+    NSArray* constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=spacing)-[self]-(>=spacing)-|"
+                                                                   options:0
+                                                                   metrics:@{@"spacing": @(25)}
+                                                                     views:@{@"self": self}];
+    [self.superview addConstraints:constraints];
 }
 
 #pragma mark - Cleanup
