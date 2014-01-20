@@ -38,6 +38,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 @property (nonatomic, strong) UIView *rootView;
 @property (nonatomic, strong) UIView *backgroundColorView;
 @property (nonatomic, strong) NSMutableOrderedSet *alertViews;
+@property (weak) UIViewController* hostController;
 @end
 
 @implementation SDCAlertViewController
@@ -75,7 +76,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	
 	/*
 	 *  When displaying a UIAlertView, the view that contains the dimmed background and alert view itself
-	 *  ("self.rootView") is added as a separate view to the UIWindow. The original implementation of 
+	 *  ("self.rootView") is added as a separate view to the UIWindow. The original implementation of
 	 *  SDCAlertView did the same, but handling rotation is much easier when self.rootView is added to
 	 *  self.view. So, while it's implemented differently by Apple, this solution is probably easier
 	 *  with regards to auto-rotation, which is why self.rootView is now added to self.view instead of self.window.
@@ -93,6 +94,16 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	[self.rootView addSubview:self.backgroundColorView];
 	
 	[self.rootView sdc_horizontallyCenterInSuperview];
+}
+
+#pragma mark - Status Bar Handling
+
+- (UIViewController *)childViewControllerForStatusBarHidden {
+    return self.hostController;
+}
+
+- (UIViewController *)childViewControllerForStatusBarStyle {
+    return self.hostController;
 }
 
 #pragma mark - Showing/Hiding
@@ -117,6 +128,8 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
     }
     
 	[self.rootView addSubview:alert];
+    
+    self.hostController = [[UIApplication sharedApplication] keyWindow].rootViewController;
 	
 	if ([[UIApplication sharedApplication] keyWindow] != self.window) {
 		[[[UIApplication sharedApplication] keyWindow] setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
@@ -142,7 +155,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
         if ([self.alertViews count] == 1)
             self.previousWindow.tintAdjustmentMode = UIViewTintAdjustmentModeAutomatic;
     }
-
+    
 	void (^dismissBlock)() = ^{
 		[alert removeFromSuperview];
         
@@ -155,6 +168,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
             if ([self.alertViews count] == 0) {
                 [self.previousWindow makeKeyAndVisible];
                 self.window = nil;
+                self.hostController = nil;
             }
         }
 		
@@ -233,7 +247,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 	[alert.alertBackgroundView.layer addAnimation:opacityAnimation forKey:@"opacity"];
 	[alert.alertContentView.layer addAnimation:opacityAnimation forKey:@"opacity"];
 	[alert.toolbar.layer addAnimation:opacityAnimation forKey:@"opacity"];
-
+    
 	// If the last alert is being dismissed, also animate the dimmed background back to normal
     @synchronized(self.alertViews) {
         if ([self.alertViews count] == 1) {
