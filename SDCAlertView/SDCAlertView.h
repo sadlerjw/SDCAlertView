@@ -7,13 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSInteger, SDCAlertViewStyle) {
-    SDCAlertViewStyleDefault = 0,
-    SDCAlertViewStyleSecureTextInput,
-    SDCAlertViewStylePlainTextInput,
-    SDCAlertViewStyleLoginAndPasswordInput
-};
+#import "SDCAlertViewWrapper.h"
 
 @class SDCAlertView;
 
