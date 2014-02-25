@@ -99,11 +99,11 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
 #pragma mark - Status Bar Handling
 
 - (UIViewController *)childViewControllerForStatusBarHidden {
-    return self.hostController;
+    return self.hostController == self ? nil : self.hostController;
 }
 
 - (UIViewController *)childViewControllerForStatusBarStyle {
-    return self.hostController;
+    return self.hostController == self ? nil : self.hostController;
 }
 
 #pragma mark - Showing/Hiding
@@ -129,7 +129,7 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
     
 	[self.rootView addSubview:alert];
     
-    self.hostController = [[UIApplication sharedApplication] keyWindow].rootViewController;
+        self.hostController = [[UIApplication sharedApplication] keyWindow].rootViewController;
 	
 	if ([[UIApplication sharedApplication] keyWindow] != self.window) {
 		[[[UIApplication sharedApplication] keyWindow] setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
