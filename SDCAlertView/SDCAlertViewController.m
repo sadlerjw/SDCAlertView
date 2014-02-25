@@ -129,7 +129,9 @@ static CGFloat			const SDCAlertViewSpringAnimationVelocity = 0;
     
 	[self.rootView addSubview:alert];
     
+    if (self.hostController == nil) {
         self.hostController = [[UIApplication sharedApplication] keyWindow].rootViewController;
+    }
 	
 	if ([[UIApplication sharedApplication] keyWindow] != self.window) {
 		[[[UIApplication sharedApplication] keyWindow] setTintAdjustmentMode:UIViewTintAdjustmentModeDimmed];
