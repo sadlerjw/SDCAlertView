@@ -308,9 +308,14 @@ static NSInteger const SDCAlertViewMinimumVerticalMargin = 25;
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	
+	[self applyBlurEffect];
+	[super layoutSubviews];
+}
+
+- (void)applyBlurEffect {
 	self.toolbar = [[UIToolbar alloc] initWithFrame:self.bounds];
-	[self.layer insertSublayer:self.toolbar.layer atIndex:0];
+	self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+	[self insertSubview:self.toolbar atIndex:0];
 }
 
 - (void)updateConstraints {
