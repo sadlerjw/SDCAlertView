@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'SDCAlertView'
-  s.version      = '0.10'
+  s.version      = '0.11'
   s.license      =  { :type => 'MIT', :file => 'LICENSE' }
   s.authors      =  { 'Scott Berrevoets' => 's.berrevoets@me.com' }
   s.summary      = 'SDCAlertView adds a contentView property to a pixel-for-pixel clone of UIAlertView'
