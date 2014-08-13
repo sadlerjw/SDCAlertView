@@ -21,6 +21,7 @@ static UIEdgeInsets const SDCAlertViewTextFieldBackgroundViewInsets = {0, 2, 0, 
 static UIEdgeInsets const SDCAlertViewTextFieldTextInsets = {0, 4, 0, 4};
 static CGFloat const SDCAlertViewPrimaryTextFieldHeight = 30;
 static CGFloat const SDCAlertViewSecondaryTextFieldHeight = 29;
+static CGFloat const SDCAlertViewButtonTableViewRowHeight = 44;
 
 static CGFloat const SDCAlertViewSeparatorThickness = 1;
 CGFloat SDCAlertViewGetSeparatorThickness() {
@@ -191,6 +192,7 @@ CGFloat SDCAlertViewGetSeparatorThickness() {
 	tableView.separatorInset = UIEdgeInsetsZero;
 	tableView.separatorColor = [UIColor sdc_alertSeparatorColor];
 	tableView.scrollEnabled = NO;
+	tableView.rowHeight = SDCAlertViewButtonTableViewRowHeight;
 	return tableView;
 }
 
